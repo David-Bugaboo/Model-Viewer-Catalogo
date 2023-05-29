@@ -188,9 +188,9 @@
 
 
     }
-    
 
-    #openButton{
+
+    #openButton {
       width: 50px;
       height: 50px;
       background-color: transparent;
@@ -201,9 +201,10 @@
     }
 
 
-    #openButton:disabled{
+    #openButton:disabled {
       opacity: 50%;
     }
+
     .hide {
       display: none;
     }
@@ -247,9 +248,9 @@
           src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fshare.svg?alt=media&token=c3063d74-49de-48b7-8579-d41563374bd5"
           alt="">
       </button>
-      <button class="hide" id="openButton">
+      <div class="hide" id="openButton">
         open
-      </button>
+      </div>
       <button class="btnRedimensionar" id="redimensionar">
         <img
           src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fdimensao.svg?alt=media&token=afc6cb10-7b80-45bc-9a97-d1cb9372b72a"
@@ -298,21 +299,21 @@
     var showPosicao = false;
     const modelViewer = document.querySelector('#dimension-demo');
     var openButton = document.getElementById("openButton")
-    
-   
+
+
     var open = false
-    
+
     openButton.addEventListener("click", async () => {
-      if (open===false) {
+      if (open === false) {
         openButton.disabled = true
         modelViewer.play()
         await setTimeout(() => {
-          
+
           modelViewer.pause()
           open = true
-        openButton.innerText="close"
-        open=true
-        openButton.disabled = false
+          openButton.innerText = "close"
+          open = true
+          openButton.disabled = false
         }, 5000)
 
       }
@@ -320,13 +321,13 @@
         openButton.disabled = true
         modelViewer.play()
         await setTimeout(() => {
-          
+
           modelViewer.pause()
           open = false
-          openButton.innerText="open"
+          openButton.innerText = "open"
           openButton.disabled = false
         }, 5500)
-        
+
       }
     })
 
@@ -369,6 +370,7 @@
         if (showDimension) {
           hotspot.classList.remove('hide');
         } else {
+          if(hotspot.id!=="openButton")
           hotspot.classList.add('hide');
           btnRedimensionar.classList.remove('hide');
           btnShared.classList.remove('hide');
@@ -470,10 +472,10 @@
       const names = modelViewer.availableAnimations;
       console.log(names);
 
-      if (modelViewer.availableAnimations.length>0){
-      openButton.classList.remove("hide")
-    }
-      
+      if (modelViewer.availableAnimations.length > 0) {
+        openButton.classList.remove("hide")
+      }
+
 
       modelViewer.updateHotspot({
         name: 'hotspot-dot+X-Y+Z',
