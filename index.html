@@ -248,9 +248,9 @@
           src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fshare.svg?alt=media&token=c3063d74-49de-48b7-8579-d41563374bd5"
           alt="">
       </button>
-      <div class="hide" id="openButton">
+      <button class="hide" id="openButton">
         open
-      </div>
+      </button>
       <button class="btnRedimensionar" id="redimensionar">
         <img
           src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fdimensao.svg?alt=media&token=afc6cb10-7b80-45bc-9a97-d1cb9372b72a"
@@ -370,8 +370,9 @@
         if (showDimension) {
           hotspot.classList.remove('hide');
         } else {
-          if(hotspot.id!=="openButton")
-          hotspot.classList.add('hide');
+          if (hotspot.id !== "openButton") {
+            hotspot.classList.add('hide');
+          }
           btnRedimensionar.classList.remove('hide');
           btnShared.classList.remove('hide');
           btnPosicao.classList.remove('hide');
