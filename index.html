@@ -188,8 +188,22 @@
 
 
     }
+    
+
+    #openButton{
+      width: 50px;
+      height: 50px;
+      background-color: transparent;
+      border-radius: 60px;
+      border: 0px;
+      background-color: #ab80da;
+      color: white;
+    }
 
 
+    #openButton:disabled{
+      opacity: 50%;
+    }
     .hide {
       display: none;
     }
@@ -203,10 +217,10 @@
 
 <body>
 
-  <model-viewer enable-pan environment-image="neutral" autoplay style="width: 100%; height: 98vh" loading="eager"
+  <model-viewer enable-pan environment-image="neutral" style="width: 100%; height: 98vh" loading="eager"
     id="dimension-demo" ar ar-modes="quick-look scene-viewer webxr" xr-environment ar-scale="auto"
-    camera-orbit="-30deg auto auto" max-camera-orbit="auto 100deg auto" camera-controls
-    src="https://simplexr-vritems.s3.sa-east-1.amazonaws.com/nesher/cozinhas-nesher/80V5V5/COZINHA BURGUESA_39_v03.glb">
+    camera-orbit="-30deg auto auto" max-camera-orbit="auto 100deg auto" camera-controls animation-name="rootAction"
+    src="AnimatedGLB/armario_nesher_05.glb">
     <button slot="hotspot-dot+X-Y+Z" class="dot hide" data-position="1 -1 1" data-normal="1 0 0"></button>
     <button slot="hotspot-dim+X-Y" class="dim hide" data-position="1 -1 0" data-normal="1 0 0"></button>
     <button slot="hotspot-dot+X-Y-Z" class="dot hide" data-position="1 -1 -1" data-normal="1 0 0"></button>
@@ -233,7 +247,9 @@
           src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fshare.svg?alt=media&token=c3063d74-49de-48b7-8579-d41563374bd5"
           alt="">
       </button>
-
+      <button id="openButton">
+        open
+      </button>
       <button class="btnRedimensionar" id="redimensionar">
         <img
           src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fdimensao.svg?alt=media&token=afc6cb10-7b80-45bc-9a97-d1cb9372b72a"
@@ -280,12 +296,47 @@
     var exposure = 0;
     var showDimension = false;
     var showPosicao = false;
-
     const modelViewer = document.querySelector('#dimension-demo');
+    var openButton = document.getElementById("openButton")
+    
+   
+    var open = false
+    
+    openButton.addEventListener("click", async () => {
+      if (open===false) {
+        openButton.disabled = true
+        modelViewer.play()
+        await setTimeout(() => {
+          
+          modelViewer.pause()
+          open = true
+        openButton.innerText="close"
+        open=true
+        openButton.disabled = false
+        }, 5000)
+
+      }
+      else {
+        openButton.disabled = true
+        modelViewer.play()
+        await setTimeout(() => {
+          
+          modelViewer.pause()
+          open = false
+          openButton.innerText="open"
+          openButton.disabled = false
+        }, 5500)
+        
+      }
+    })
+
     var glb = location.href.split('?')[1].split('&')[0].split('=');
     var usdz = location.href.split('?')[1].split('&')[1].split('=');
     var code = location.href.split('?')[1].split('&')[2].split('=');
     var nickname = location.href.split('?')[1].split('&')[3].split('=');
+
+
+
 
 
     console.log(window.location.href)
@@ -416,6 +467,13 @@
       const x2 = size.x / 2;
       const y2 = size.y / 2;
       const z2 = size.z / 2;
+      const names = modelViewer.availableAnimations;
+      console.log(names);
+
+      if (modelViewer.availableAnimations.length===0){
+      openButton.classList.add("hide")
+    }
+      
 
       modelViewer.updateHotspot({
         name: 'hotspot-dot+X-Y+Z',
