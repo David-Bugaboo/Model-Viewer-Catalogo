@@ -247,7 +247,7 @@
           src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fshare.svg?alt=media&token=c3063d74-49de-48b7-8579-d41563374bd5"
           alt="">
       </button>
-      <button id="openButton">
+      <button class="hide" id="openButton">
         open
       </button>
       <button class="btnRedimensionar" id="redimensionar">
@@ -471,7 +471,7 @@
       console.log(names);
 
       if (modelViewer.availableAnimations.length===0){
-      openButton.classList.add("hide")
+      openButton.classList.remove("hide")
     }
       
 
