@@ -374,7 +374,9 @@
       showDimension = !showDimension;
       modelViewer.querySelectorAll('button').forEach((hotspot) => {
         if (showDimension) {
-          hotspot.classList.remove('hide');
+          if (hotspot.id !== "openButton") {
+            hotspot.classList.remove('hide');
+          }
         } else {
           if (hotspot.id !== "openButton") {
             hotspot.classList.add('hide');
