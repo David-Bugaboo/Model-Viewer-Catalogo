@@ -191,18 +191,18 @@
 
 
     #openButton {
-      width: 50px;
+      width: 150px;
       height: 50px;
       background-color: transparent;
-      border-radius: 60px;
-      border: 0px;
-      background-color: #ab80da;
-      color: white;
+      border: none; 
     }
 
+    #openButtonImage{
+      width: 100%;
+    }
 
-    #openButton:disabled {
-      opacity: 50%;
+    #openButton:disabled{
+      opacity: 50;
     }
 
     .hide {
@@ -248,7 +248,10 @@
           alt="">
       </button>
       <button class="hide" id="openButton">
-        open
+        <img
+          id="openButtonImage"
+          src="./openDoors.png"
+          alt="">
       </button>
       <button class="btnRedimensionar" id="redimensionar">
         <img
@@ -297,7 +300,8 @@
     var showDimension = false;
     var showPosicao = false;
     const modelViewer = document.querySelector('#dimension-demo');
-    var openButton = document.getElementById("openButton")
+    const openButton = document.getElementById("openButton")
+    const openButtonImage = document.getElementById("openButtonImage")
 
 
     var open = false
@@ -310,7 +314,7 @@
 
           modelViewer.pause()
           open = true
-          openButton.innerText = "close"
+          openButtonImage.src = "./closeDoors.png"
           open = true
           openButton.disabled = false
         }, 1500)
@@ -323,7 +327,7 @@
 
           modelViewer.pause()
           open = false
-          openButton.innerText = "open"
+          openButtonImage.src = "./openDoors.png"
           openButton.disabled = false
         }, 1500)
 
