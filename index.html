@@ -1,564 +1,532 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt">
+  <head>
+    <meta charset="utf-8" />
 
-<head>
-  <meta charset="utf-8">
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      type="module"
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+    ></script>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Titillium+Web&display=swap");
 
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Titillium+Web&display=swap');
-
-    #controls {
-      position: absolute;
-      top: 0x;
-      right: 30px;
-      max-width: unset;
-      transform: unset;
-
-    }
-
-    #controls button {
-      cursor: pointer;
-    }
-
-    .dot {
-      display: block;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-      background: linear-gradient(180deg, #B64C70 0%, #5B0DAF 100%);
-      --min-hotspot-opacity: 0;
-      border: 0px;
-    }
-
-    .dim {
-
-      border-radius: 4px;
-
-      color: #52468F;
-      display: block;
-      font-family: Futura, Helvetica Neue, sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      max-width: 128px;
-      overflow-wrap: break-word;
-      padding: 0.2em;
-      position: absolute;
-      width: max-content;
-      height: max-content;
-      transform: translate3d(-50%, -50%, 0);
-      --min-hotspot-opacity: 0;
-      border: 1px solid;
-      border-image: linear-gradient(to right, darkblue, darkorchid) 1
-    }
-
-    .show {
-      --min-hotspot-opacity: 1;
-    }
-
-    .btnRedimensionar {
-      width: 50px;
-      height: 50px;
-      background-color: transparent;
-      border: 0px;
-    }
-
-    .btnRedimensionar img {
-      width: 100%;
-    }
-
-    .posicao {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: absolute;
-      background-color: white;
-      top: 50px;
-      width: 50px;
-      height: 180px;
-      z-index: 100;
-      right: 0;
-      border-radius: 7px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-    }
-
-    .posicao button {
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-    }
-
-    .naoMostra {
-      display: none;
-    }
-
-
-    body {
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .arButton {
-      position: fixed;
-      bottom: 15%;
-      left: 50%;
-      transform: translateX(-50%);
-      ;
-      box-sizing: border-box;
-      width: 66%;
-      height: 20px;
-      border: none;
-      min-width: 160px;
-
-      border: 1px solid;
-      background-color: rgba(255, 255, 255, 0.247);
-      border-color: #e4afe4;
-      /*box-shadow: 0px -4px 20px rgba(124, 61, 192, 0.15), 0px 2px 15px rgba(255, 255, 255, 0.75), inset 0px 0px 10px #FFFFFF, inset 0px 0px 15px #FFFFFF, inset 0px 0px 20px rgba(82, 70, 143, 0.33), inset 3px 3px 20px rgba(181, 160, 204, 0.48);*/
-      box-shadow: 0px -4px 10px #F2F1F7, 0px 8px 15px rgba(198, 80, 202, 0.15);
-      border-radius: 969px;
-      display: flex;
-      padding: 15px 15px;
-      justify-content: center;
-      gap: 8px;
-      align-items: center;
-      cursor: pointer;
-      font-size: 0.575rem;
-      text-align: center;
-      color: #b451a7;
-      font-weight: 700;
-    }
-
-    .aviso {
-      position: absolute;
-      /* position the div in center */
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: linear-gradient(182.59deg, #FFFFFF 2.16%, #F4E7F5 97.84%);
-      box-shadow: 0px 8px 20px rgba(82, 70, 143, 0.25);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 200px;
-      height: 40px;
-
-
-      text-align: center;
-      border-radius: 15px;
-      font-size: 18px;
-      font-family: 'Titillium Web', sans-serif;
-      color: #52468F;
-      /* animation: aparecer 0.2s linear forwards; */
-      z-index: 100;
-    }
-
-    .some {
-      animation: sumir 2s linear forwards;
-      animation-delay: 1s;
-    }
-
-    @keyframes aparecer {
-      0% {
-        opacity: 0;
+      #divPosicao {
+        height: auto;
+      }
+      #controls {
+        position: absolute;
+        top: 0x;
+        right: 30px;
+        max-width: unset;
+        transform: unset;
+        display: flex;
+        align-items: center;
       }
 
-      100% {
-        opacity: 1;
+      #controls button {
+        cursor: pointer;
       }
 
-
-    }
-
-    @keyframes sumir {
-      0% {
-        opacity: 1;
+      .dot {
+        display: block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+        background: linear-gradient(180deg, #b64c70 0%, #5b0daf 100%);
+        --min-hotspot-opacity: 0;
+        border: 0px;
       }
 
-      100% {
-        opacity: 0;
+      .dim {
+        border-radius: 4px;
 
+        color: #52468f;
+        display: block;
+        font-family: Futura, Helvetica Neue, sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        max-width: 128px;
+        overflow-wrap: break-word;
+        padding: 0.2em;
+        position: absolute;
+        width: max-content;
+        height: max-content;
+        transform: translate3d(-50%, -50%, 0);
+        --min-hotspot-opacity: 0;
+        border: 1px solid;
+        border-image: linear-gradient(to right, darkblue, darkorchid) 1;
       }
 
+      .show {
+        --min-hotspot-opacity: 1;
+      }
 
-    }
+      .btnRedimensionar {
+        width: 50px;
+        height: 50px;
+        background-color: transparent;
+        border: 0px;
+      }
 
+      .btnRedimensionar img {
+        width: 100%;
+      }
 
-    #openButton {
-      width: 150px;
-      height: 50px;
-      background-color: transparent;
-      border: none; 
-    }
+      .posicao {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+        background-color: white;
+        top: 50px;
+        width: 50px;
+        height: 180px;
+        z-index: 100;
+        right: 0;
+        border-radius: 7px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+      }
 
-    #openButtonImage{
-      width: 100%;
-    }
+      .posicao button {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+      }
 
-    #openButton:disabled{
-      opacity: 50;
-    }
+      .naoMostra {
+        display: none;
+      }
 
-    .hide {
-      display: none;
-    }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-    /* This keeps child nodes hidden while the element loads */
-    :not(:defined)>* {
-      display: none;
-    }
-  </style>
-</head>
+      .arButton {
+        position: fixed;
+        bottom: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+        box-sizing: border-box;
+        width: 66%;
+        height: 20px;
+        border: none;
+        min-width: 160px;
 
-<body>
+        border: 1px solid;
+        background-color: rgba(255, 255, 255, 0.247);
+        border-color: #e4afe4;
+        /*box-shadow: 0px -4px 20px rgba(124, 61, 192, 0.15), 0px 2px 15px rgba(255, 255, 255, 0.75), inset 0px 0px 10px #FFFFFF, inset 0px 0px 15px #FFFFFF, inset 0px 0px 20px rgba(82, 70, 143, 0.33), inset 3px 3px 20px rgba(181, 160, 204, 0.48);*/
+        box-shadow: 0px -4px 10px #f2f1f7, 0px 8px 15px rgba(198, 80, 202, 0.15);
+        border-radius: 969px;
+        display: flex;
+        padding: 15px 15px;
+        justify-content: center;
+        gap: 8px;
+        align-items: center;
+        cursor: pointer;
+        font-size: 0.575rem;
+        text-align: center;
+        color: #b451a7;
+        font-weight: 700;
+      }
 
-  <model-viewer enable-pan environment-image="neutral" style="width: 100%; height: 98vh" loading="eager"
-    id="dimension-demo" ar ar-modes="quick-look webxr scene-viewer" xr-environment ar-scale="auto" camera-orbit="-30deg auto auto"
-    max-camera-orbit="auto 100deg auto" camera-controls src="AnimatedGLB/armario_nesher_05.glb">
-    <button slot="hotspot-dot+X-Y+Z" class="dot hide" data-position="1 -1 1" data-normal="1 0 0"></button>
-    <button slot="hotspot-dim+X-Y" class="dim hide" data-position="1 -1 0" data-normal="1 0 0"></button>
-    <button slot="hotspot-dot+X-Y-Z" class="dot hide" data-position="1 -1 -1" data-normal="1 0 0"></button>
-    <button slot="hotspot-dim+X-Z" class="dim hide" data-position="1 0 -1" data-normal="1 0 0"></button>
-    <button slot="hotspot-dot+X+Y-Z" class="dot show hide" data-position="1 1 -1" data-normal="0 1 0"></button>
-    <button slot="hotspot-dim+Y-Z" class="dim show hide" data-position="0 -1 -1" data-normal="0 1 0"></button>
-    <button slot="hotspot-dot-X+Y-Z" class="dot show hide" data-position="-1 1 -1" data-normal="0 1 0"></button>
-    <button slot="hotspot-dim-X-Z" class="dim hide" data-position="-1 0 -1" data-normal="-1 0 0"></button>
-    <button slot="hotspot-dot-X-Y-Z" class="dot hide" data-position="-1 -1 -1" data-normal="-1 0 0"></button>
-    <button slot="hotspot-dim-X-Y" class="dim hide" data-position="-1 -1 0" data-normal="-1 0 0"></button>
-    <button slot="hotspot-dot-X-Y+Z" class="dot hide" data-position="-1 -1 1" data-normal="-1 0 0"></button>
+      .aviso {
+        position: absolute;
+        /* position the div in center */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(182.59deg, #ffffff 2.16%, #f4e7f5 97.84%);
+        box-shadow: 0px 8px 20px rgba(82, 70, 143, 0.25);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 200px;
+        height: 40px;
 
-    <p class="aviso hide some" id="aviso">Link copiado!</p>
+        text-align: center;
+        border-radius: 15px;
+        font-size: 18px;
+        font-family: "Titillium Web", sans-serif;
+        color: #52468f;
+        /* animation: aparecer 0.2s linear forwards; */
+        z-index: 100;
+      }
 
-    <button class="arButton" slot="ar-button" id="ar-button">
-      <img style="width:15px; height:15px; object-fit: contain;"
-        src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fsimplexr.svg?alt=media&token=bbbb886b-322b-49b4-aa72-29b9da349924">
-      <p>Visualize no seu ambiente</p>
-    </button>
+      .some {
+        animation: sumir 2s linear forwards;
+        animation-delay: 1s;
+      }
 
-    <div id="controls" class="">
-      <button class="btnRedimensionar" id="shared">
+      @keyframes aparecer {
+        0% {
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes sumir {
+        0% {
+          opacity: 1;
+        }
+
+        100% {
+          opacity: 0;
+        }
+      }
+
+      #openButton {
+        width: 150px;
+        height: 50px;
+        background-color: transparent;
+        border: none;
+      }
+
+      #openButtonImage {
+        width: 100%;
+      }
+
+      #openButton:disabled {
+        opacity: 50;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      /* This keeps child nodes hidden while the element loads */
+      :not(:defined) > * {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <model-viewer
+      enable-pan
+      environment-image="neutral"
+      style="width: 100%; height: 98vh"
+      loading="eager"
+      id="dimension-demo"
+      ar
+      ar-modes="quick-look webxr scene-viewer"
+      xr-environment
+      ar-scale="auto"
+      camera-orbit="-30deg auto auto"
+      max-camera-orbit="auto 100deg auto"
+      camera-controls
+      src="AnimatedGLB/armario_nesher_05.glb"
+    >
+      <button
+        slot="hotspot-dot+X-Y+Z"
+        class="dot hide"
+        data-position="1 -1 1"
+        data-normal="1 0 0"
+      ></button>
+      <button
+        slot="hotspot-dim+X-Y"
+        class="dim hide"
+        data-position="1 -1 0"
+        data-normal="1 0 0"
+      ></button>
+      <button
+        slot="hotspot-dot+X-Y-Z"
+        class="dot hide"
+        data-position="1 -1 -1"
+        data-normal="1 0 0"
+      ></button>
+      <button
+        slot="hotspot-dim+X-Z"
+        class="dim hide"
+        data-position="1 0 -1"
+        data-normal="1 0 0"
+      ></button>
+      <button
+        slot="hotspot-dot+X+Y-Z"
+        class="dot show hide"
+        data-position="1 1 -1"
+        data-normal="0 1 0"
+      ></button>
+      <button
+        slot="hotspot-dim+Y-Z"
+        class="dim show hide"
+        data-position="0 -1 -1"
+        data-normal="0 1 0"
+      ></button>
+      <button
+        slot="hotspot-dot-X+Y-Z"
+        class="dot show hide"
+        data-position="-1 1 -1"
+        data-normal="0 1 0"
+      ></button>
+      <button
+        slot="hotspot-dim-X-Z"
+        class="dim hide"
+        data-position="-1 0 -1"
+        data-normal="-1 0 0"
+      ></button>
+      <button
+        slot="hotspot-dot-X-Y-Z"
+        class="dot hide"
+        data-position="-1 -1 -1"
+        data-normal="-1 0 0"
+      ></button>
+      <button
+        slot="hotspot-dim-X-Y"
+        class="dim hide"
+        data-position="-1 -1 0"
+        data-normal="-1 0 0"
+      ></button>
+      <button
+        slot="hotspot-dot-X-Y+Z"
+        class="dot hide"
+        data-position="-1 -1 1"
+        data-normal="-1 0 0"
+      ></button>
+
+      <p class="aviso hide some" id="aviso">Link copiado!</p>
+
+      <button class="arButton" slot="ar-button" id="ar-button">
         <img
-          src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fshare.svg?alt=media&token=c3063d74-49de-48b7-8579-d41563374bd5"
-          alt="">
+          style="width: 15px; height: 15px; object-fit: contain"
+          src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fsimplexr.svg?alt=media&token=bbbb886b-322b-49b4-aa72-29b9da349924"
+        />
+        <p>Visualize no seu ambiente</p>
       </button>
-      <button class="hide" id="openButton">
-        <img
-          id="openButtonImage"
-          src="./openDoors.png"
-          alt="">
-      </button>
-      <button class="btnRedimensionar" id="redimensionar">
-        <img
-          src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fdimensao.svg?alt=media&token=afc6cb10-7b80-45bc-9a97-d1cb9372b72a"
-          alt="">
-      </button>
-      <button class="btnRedimensionar" id="posicao">
-        <img
-          src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Ftextura.svg?alt=media&token=dc5e598d-df5f-4f3a-bf1b-e061cd7554da"
-          alt="">
-      </button>
-      <div class="posicao hide" id="divPosicao">
-        <!-- frente -->
-        <button class="btnRedimensionar" id="posicao1">
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fp1.svg?alt=media&token=8c338da1-1923-49cc-867e-36c4685bdd09"
-            alt="">
+
+      <div id="controls" class="">
+        <button class="hide" id="openButton">
+          <img id="openButtonImage" src="https://mundo-iel.s3.amazonaws.com/Group+184.png" alt="" />
         </button>
-        <button class="btnRedimensionar" id="posicao2">
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fp2.svg?alt=media&token=eaa2a1dd-1973-447f-b78e-00e604dd3dd1"
-            alt="">
+
+        <button class="btnRedimensionar" id="posicao">
+          <img src="./MicrosoftTeams-image.png" alt="" />
         </button>
-        <button class="btnRedimensionar" id="posicao3">
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fp3.svg?alt=media&token=9931c185-7ca3-4b1f-9f13-3406428f5d31"
-            alt="">
-        </button>
-        <button class="btnRedimensionar" id="posicao4">
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fp4.svg?alt=media&token=9453a4a6-a87b-41b1-8af0-38deb8bd054e"
-            alt="">
-        </button>
-        <button class="btnRedimensionar" id="posicao5">
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fp5.svg?alt=media&token=df674e20-ef66-4408-af63-4f0b60410c2d"
-            alt="">
-        </button>
+        <div class="posicao hide" id="divPosicao">
+          <!-- frente -->
+          <button class="btnRedimensionar" id="shared">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fshare.svg?alt=media&token=c3063d74-49de-48b7-8579-d41563374bd5"
+              alt=""
+            />
+          </button>
+
+          <button class="btnRedimensionar" id="redimensionar">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fdimensao.svg?alt=media&token=afc6cb10-7b80-45bc-9a97-d1cb9372b72a"
+              alt=""
+            />
+          </button>
+        </div>
       </div>
-    </div>
-  </model-viewer>
+    </model-viewer>
 
-  <script type="module">
+    <script type="module">
+      var exposure = 0;
+      var showDimension = false;
+      var showPosicao = false;
+      const modelViewer = document.querySelector("#dimension-demo");
+      const openButton = document.getElementById("openButton");
+      const openButtonImage = document.getElementById("openButtonImage");
 
-    var exposure = 0;
-    var showDimension = false;
-    var showPosicao = false;
-    const modelViewer = document.querySelector('#dimension-demo');
-    const openButton = document.getElementById("openButton")
-    const openButtonImage = document.getElementById("openButtonImage")
+      var open = false;
 
-
-    var open = false
-
-    openButton.addEventListener("click", async () => {
-      if (open === false) {
-        openButton.disabled = true
-        modelViewer.play()
-        await setTimeout(() => {
-
-          modelViewer.pause()
-          open = true
-          openButtonImage.src = "./closeDoors.png"
-          open = true
-          openButton.disabled = false
-        }, 1500)
-
-      }
-      else {
-        openButton.disabled = true
-        modelViewer.play()
-        await setTimeout(() => {
-
-          modelViewer.pause()
-          open = false
-          openButtonImage.src = "./openDoors.png"
-          openButton.disabled = false
-        }, 1500)
-
-      }
-    })
-
-    var glb = location.href.split('?')[1].split('&')[0].split('=');
-    var usdz = location.href.split('?')[1].split('&')[1].split('=');
-    var code = location.href.split('?')[1].split('&')[2].split('=');
-    var nickname = location.href.split('?')[1].split('&')[3].split('=');
-
-
-    /*pause anims in AR*/
-    modelViewer.addEventListener("ar-status", (e) => {
-      if (e.detail.status === 'object-placed') {
-        modelViewer.pause()
-      }
-    })
-
-    modelViewer.addEventListener("quick-look-button-tapped", () => modelViewer.pause())
-
-
-    console.log(window.location.href)
-    modelViewer.src = glb[1];
-    //modelViewer.iosSrc = usdz[1];
-    code = code[1];
-    nickname = nickname[1]
-
-    const btnRedimensionar = modelViewer.querySelector('#redimensionar');
-    const btnShared = modelViewer.querySelector('#shared');
-    const btnPosicao = modelViewer.querySelector('#posicao');
-    const btnAr = modelViewer.querySelector('#ar-button')
-    const divPosicao = modelViewer.querySelector('#divPosicao');
-    const divAviso = modelViewer.querySelector('#aviso');
-
-    const btnPosicao1 = modelViewer.querySelector('#posicao1');
-    const btnPosicao2 = modelViewer.querySelector('#posicao2');
-    const btnPosicao3 = modelViewer.querySelector('#posicao3');
-    const btnPosicao4 = modelViewer.querySelector('#posicao4');
-    const btnPosicao5 = modelViewer.querySelector('#posicao5');
-
-
-    if (nickname == "moveis-bechara" || nickname == "whirlpool") {
-      btnRedimensionar.classList.add("hide")
-    }
-
-    btnRedimensionar.addEventListener('click', () => {
-      showDimension = !showDimension;
-      modelViewer.querySelectorAll('button').forEach((hotspot) => {
-        if (showDimension) {
-          if (hotspot.id !== "openButton") {
-            hotspot.classList.remove('hide');
-          }
+      openButton.addEventListener("click", async () => {
+        if (open === false) {
+          openButton.disabled = true;
+          modelViewer.play();
+          await setTimeout(() => {
+            modelViewer.pause();
+            open = true;
+            openButtonImage.src = "https://mundo-iel.s3.amazonaws.com/Group+17.png";
+            open = true;
+            openButton.disabled = false;
+          }, 1500);
         } else {
-          if (hotspot.id !== "openButton") {
-            hotspot.classList.add('hide');
-          }
-          btnRedimensionar.classList.remove('hide');
-          btnShared.classList.remove('hide');
-          btnPosicao.classList.remove('hide');
-          btnPosicao1.classList.remove('hide');
-          btnPosicao2.classList.remove('hide');
-          btnPosicao3.classList.remove('hide');
-          btnPosicao4.classList.remove('hide');
-          btnPosicao5.classList.remove('hide');
-          btnAr.classList.remove('hide');
+          openButton.disabled = true;
+          modelViewer.play();
+          await setTimeout(() => {
+            modelViewer.pause();
+            open = false;
+            openButtonImage.src = "https://mundo-iel.s3.amazonaws.com/Group+184.png";
+            openButton.disabled = false;
+          }, 1500);
         }
       });
-    });
-    btnShared.addEventListener('click', () => {
-      divAviso.classList.add('hide');
-      var inputc = document.body.appendChild(document.createElement("input"));
-      inputc.value = `https://simplexr-cliente.herokuapp.com/catalogo/${code}`;
-      inputc.focus();
-      inputc.select();
-      document.execCommand('copy');
-      inputc.parentNode.removeChild(inputc);
-      divAviso.classList.remove('hide');
-    });
-    btnPosicao.addEventListener('click', () => {
-      showPosicao = !showPosicao;
-      if (showPosicao) {
-        divPosicao.classList.remove('hide');
-      } else {
-        divPosicao.classList.add('hide');
 
+      var glb = location.href.split("?")[1].split("&")[0].split("=");
+      var usdz = location.href.split("?")[1].split("&")[1].split("=");
+      var code = location.href.split("?")[1].split("&")[2].split("=");
+      var nickname = location.href.split("?")[1].split("&")[3].split("=");
+
+      /*pause anims in AR*/
+      modelViewer.addEventListener("ar-status", (e) => {
+        if (e.detail.status === "object-placed") {
+          modelViewer.pause();
+        }
+      });
+
+      modelViewer.addEventListener("quick-look-button-tapped", () =>
+        modelViewer.pause()
+      );
+
+      console.log(window.location.href);
+      modelViewer.src = glb[1];
+      //modelViewer.iosSrc = usdz[1];
+      code = code[1];
+      nickname = nickname[1];
+
+      const btnRedimensionar = document.querySelector("#redimensionar");
+      const btnShared = document.querySelector("#shared");
+      const btnPosicao = document.querySelector("#posicao");
+      const btnAr = document.querySelector("#ar-button");
+      const divPosicao = document.querySelector("#divPosicao");
+      const divAviso = document.querySelector("#aviso");
+
+      const btnPosicao1 = modelViewer.querySelector("#posicao1");
+      const btnPosicao2 = modelViewer.querySelector("#posicao2");
+      const btnPosicao3 = modelViewer.querySelector("#posicao3");
+      const btnPosicao4 = modelViewer.querySelector("#posicao4");
+      const btnPosicao5 = modelViewer.querySelector("#posicao5");
+
+      if (nickname == "moveis-bechara" || nickname == "whirlpool") {
+        btnRedimensionar.classList.add("hide");
       }
 
-    });
-    // frente
-    btnPosicao1.addEventListener('click', () => {
-      const orbitCycle = [
-        '0deg 55deg',
-        '-60deg 180deg',
-        modelViewer.cameraOrbit
-      ];
-      const currentOrbitIndex = orbitCycle.indexOf(modelViewer.cameraOrbit);
-      modelViewer.cameraOrbit = "0deg 90deg 10m"
+      btnRedimensionar.addEventListener("click", () => {
+        showDimension = !showDimension;
+        modelViewer.querySelectorAll("button").forEach((hotspot) => {
+          if (showDimension) {
+            if (hotspot.id !== "openButton") {
+              hotspot.classList.remove("hide");
+            }
+          } else {
+            if (hotspot.id !== "openButton") {
+              hotspot.classList.add("hide");
+            }
+            btnRedimensionar.classList.remove("hide");
+            btnShared.classList.remove("hide");
+            btnPosicao.classList.remove("hide");
 
-
-    });
-    // costas
-    btnPosicao2.addEventListener('click', () => {
-      const orbitCycle = [
-        '0deg 100deg',
-        '-80deg 180deg',
-        modelViewer.cameraOrbit
-      ];
-      const currentOrbitIndex = orbitCycle.indexOf(modelViewer.cameraOrbit);
-      modelViewer.cameraOrbit = "180deg 90deg 10m"
-
-    });
-    // cima
-    btnPosicao3.addEventListener('click', () => {
-      const orbitCycle = [
-        '0deg 100deg',
-        '-80deg 180deg',
-        modelViewer.cameraOrbit
-      ];
-      const currentOrbitIndex = orbitCycle.indexOf(modelViewer.cameraOrbit);
-      modelViewer.cameraOrbit = "0deg 0deg 10m"
-
-    });
-    // direita
-    btnPosicao4.addEventListener('click', () => {
-      const orbitCycle = [
-        '0deg 100deg',
-        '-80deg 180deg',
-        modelViewer.cameraOrbit
-      ];
-      const currentOrbitIndex = orbitCycle.indexOf(modelViewer.cameraOrbit);
-      modelViewer.cameraOrbit = "90deg 90deg 10m"
-
-    });
-    // direita
-    btnPosicao5.addEventListener('click', () => {
-      const orbitCycle = [
-        '0deg 100deg',
-        '-80deg 180deg',
-        modelViewer.cameraOrbit
-      ];
-      const currentOrbitIndex = orbitCycle.indexOf(modelViewer.cameraOrbit);
-      modelViewer.cameraOrbit = "-90deg 90deg 10m"
-
-    });
-
-
-    modelViewer.addEventListener('load', () => {
-
-      const center = modelViewer.getCameraTarget();
-      const size = modelViewer.getDimensions();
-      const x2 = size.x / 2;
-      const y2 = size.y / 2;
-      const z2 = size.z / 2;
-      const names = modelViewer.availableAnimations;
-      console.log(names);
-
-      if (modelViewer.availableAnimations.length > 0) {
-        openButton.classList.remove("hide")
-      }
-
-
-      modelViewer.updateHotspot({
-        name: 'hotspot-dot+X-Y+Z',
-        position: `${center.x + x2} ${center.y - y2} ${center.z + z2}`
+            btnAr.classList.remove("hide");
+          }
+        });
+      });
+      btnShared.addEventListener("click", () => {
+        divAviso.classList.add("hide");
+        var inputc = document.body.appendChild(document.createElement("input"));
+        inputc.value = `https://simplexr-cliente.herokuapp.com/catalogo/${code}`;
+        inputc.focus();
+        inputc.select();
+        document.execCommand("copy");
+        inputc.parentNode.removeChild(inputc);
+        divAviso.classList.remove("hide");
+      });
+      btnPosicao.addEventListener("click", () => {
+        showPosicao = !showPosicao;
+        if (showPosicao) {
+          divPosicao.classList.remove("hide");
+        } else {
+          divPosicao.classList.add("hide");
+        }
       });
 
-      modelViewer.updateHotspot({
-        name: 'hotspot-dim+X-Y',
-        position: `${center.x + x2} ${center.y - y2} ${center.z}`
+      modelViewer.addEventListener("load", () => {
+        console.log("passei aqui!");
+        const center = modelViewer.getCameraTarget();
+        const size = modelViewer.getDimensions();
+        const x2 = size.x / 2;
+        const y2 = size.y / 2;
+        const z2 = size.z / 2;
+        const names = modelViewer.availableAnimations;
+        console.log(names);
+
+        console.log("opa, passa aqui!");
+        if (modelViewer.availableAnimations.length > 0) {
+          console.log("show button");
+          openButton.classList.remove("hide");
+        }
+
+        modelViewer.updateHotspot({
+          name: "hotspot-dot+X-Y+Z",
+          position: `${center.x + x2} ${center.y - y2} ${center.z + z2}`,
+        });
+
+        modelViewer.updateHotspot({
+          name: "hotspot-dim+X-Y",
+          position: `${center.x + x2} ${center.y - y2} ${center.z}`,
+        });
+        modelViewer.querySelector(
+          'button[slot="hotspot-dim+X-Y"]'
+        ).textContent = `${(size.z * 100).toFixed(0)} cm`;
+
+        modelViewer.updateHotspot({
+          name: "hotspot-dot+X-Y-Z",
+          position: `${center.x + x2} ${center.y - y2} ${center.z - z2}`,
+        });
+
+        modelViewer.updateHotspot({
+          name: "hotspot-dim+X-Z",
+          position: `${center.x + x2} ${center.y} ${center.z - z2}`,
+        });
+        modelViewer.querySelector(
+          'button[slot="hotspot-dim+X-Z"]'
+        ).textContent = `${(size.y * 100).toFixed(0)} cm`;
+
+        modelViewer.updateHotspot({
+          name: "hotspot-dot+X+Y-Z",
+          position: `${center.x + x2} ${center.y + y2} ${center.z - z2}`,
+        });
+
+        modelViewer.updateHotspot({
+          name: "hotspot-dim+Y-Z",
+          position: `${center.x} ${center.y + y2} ${center.z - z2}`,
+        });
+        modelViewer.querySelector(
+          'button[slot="hotspot-dim+Y-Z"]'
+        ).textContent = `${(size.x * 100).toFixed(0)} cm`;
+
+        modelViewer.updateHotspot({
+          name: "hotspot-dot-X+Y-Z",
+          position: `${center.x - x2} ${center.y + y2} ${center.z - z2}`,
+        });
+
+        modelViewer.updateHotspot({
+          name: "hotspot-dim-X-Z",
+          position: `${center.x - x2} ${center.y} ${center.z - z2}`,
+        });
+        modelViewer.querySelector(
+          'button[slot="hotspot-dim-X-Z"]'
+        ).textContent = `${(size.y * 100).toFixed(0)} cm`;
+
+        modelViewer.updateHotspot({
+          name: "hotspot-dot-X-Y-Z",
+          position: `${center.x - x2} ${center.y - y2} ${center.z - z2}`,
+        });
+
+        modelViewer.updateHotspot({
+          name: "hotspot-dim-X-Y",
+          position: `${center.x - x2} ${center.y - y2} ${center.z}`,
+        });
+        modelViewer.querySelector(
+          'button[slot="hotspot-dim-X-Y"]'
+        ).textContent = `${(size.z * 100).toFixed(0)} cm`;
+
+        modelViewer.updateHotspot({
+          name: "hotspot-dot-X-Y+Z",
+          position: `${center.x - x2} ${center.y - y2} ${center.z + z2}`,
+        });
       });
-      modelViewer.querySelector('button[slot="hotspot-dim+X-Y"]').textContent =
-        `${(size.z * 100).toFixed(0)} cm`;
-
-      modelViewer.updateHotspot({
-        name: 'hotspot-dot+X-Y-Z',
-        position: `${center.x + x2} ${center.y - y2} ${center.z - z2}`
-      });
-
-      modelViewer.updateHotspot({
-        name: 'hotspot-dim+X-Z',
-        position: `${center.x + x2} ${center.y} ${center.z - z2}`
-      });
-      modelViewer.querySelector('button[slot="hotspot-dim+X-Z"]').textContent =
-        `${(size.y * 100).toFixed(0)} cm`;
-
-      modelViewer.updateHotspot({
-        name: 'hotspot-dot+X+Y-Z',
-        position: `${center.x + x2} ${center.y + y2} ${center.z - z2}`
-      });
-
-      modelViewer.updateHotspot({
-        name: 'hotspot-dim+Y-Z',
-        position: `${center.x} ${center.y + y2} ${center.z - z2}`
-      });
-      modelViewer.querySelector('button[slot="hotspot-dim+Y-Z"]').textContent =
-        `${(size.x * 100).toFixed(0)} cm`;
-
-      modelViewer.updateHotspot({
-        name: 'hotspot-dot-X+Y-Z',
-        position: `${center.x - x2} ${center.y + y2} ${center.z - z2}`
-      });
-
-      modelViewer.updateHotspot({
-        name: 'hotspot-dim-X-Z',
-        position: `${center.x - x2} ${center.y} ${center.z - z2}`
-      });
-      modelViewer.querySelector('button[slot="hotspot-dim-X-Z"]').textContent =
-        `${(size.y * 100).toFixed(0)} cm`;
-
-      modelViewer.updateHotspot({
-        name: 'hotspot-dot-X-Y-Z',
-        position: `${center.x - x2} ${center.y - y2} ${center.z - z2}`
-      });
-
-      modelViewer.updateHotspot({
-        name: 'hotspot-dim-X-Y',
-        position: `${center.x - x2} ${center.y - y2} ${center.z}`
-      });
-      modelViewer.querySelector('button[slot="hotspot-dim-X-Y"]').textContent =
-        `${(size.z * 100).toFixed(0)} cm`;
-
-      modelViewer.updateHotspot({
-        name: 'hotspot-dot-X-Y+Z',
-        position: `${center.x - x2} ${center.y - y2} ${center.z + z2}`
-      });
-
-    });
-
-
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>
