@@ -375,6 +375,7 @@
 
       var glb = location.href.split("?")[1].split("&")[0].split("=");
       var usdz = location.href.split("?")[1].split("&")[1].split("=");
+      
       var code = location.href.split("?")[1].split("&")[2].split("=");
       var nickname = location.href.split("?")[1].split("&")[3].split("=");
 
@@ -388,6 +389,7 @@
       console.log(window.location.href);
       modelViewer.src = glb[1];
       modelViewer.iosSrc = usdz[1];
+      console.log(modelViewer.iosSrc)
       code = code[1];
       nickname = nickname[1];
 
