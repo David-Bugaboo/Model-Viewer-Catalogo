@@ -219,7 +219,7 @@
       loading="eager"
       id="dimension-demo"
       ar
-      ar-modes="quick-look webxr scene-viewer"
+      ar-modes="quick-look scene-viewer"
       xr-environment
       ar-scale="auto"
       camera-orbit="-30deg auto auto"
@@ -306,11 +306,18 @@
 
       <div id="controls" class="">
         <button class="hide" id="openButton">
-          <img id="openButtonImage" src="https://mundo-iel.s3.amazonaws.com/Group+184.png" alt="" />
+          <img
+            id="openButtonImage"
+            src="https://mundo-iel.s3.amazonaws.com/Group+184.png"
+            alt=""
+          />
         </button>
 
         <button class="btnRedimensionar" id="posicao">
-          <img src="https://mundo-iel.s3.amazonaws.com/MicrosoftTeams-image.png" alt="" />
+          <img
+            src="https://mundo-iel.s3.amazonaws.com/MicrosoftTeams-image.png"
+            alt=""
+          />
         </button>
         <div class="posicao hide" id="divPosicao">
           <!-- frente -->
@@ -348,7 +355,8 @@
           await setTimeout(() => {
             modelViewer.pause();
             open = true;
-            openButtonImage.src = "https://mundo-iel.s3.amazonaws.com/Group+17.png";
+            openButtonImage.src =
+              "https://mundo-iel.s3.amazonaws.com/Group+17.png";
             open = true;
             openButton.disabled = false;
           }, 1500);
@@ -358,7 +366,8 @@
           await setTimeout(() => {
             modelViewer.pause();
             open = false;
-            openButtonImage.src = "https://mundo-iel.s3.amazonaws.com/Group+184.png";
+            openButtonImage.src =
+              "https://mundo-iel.s3.amazonaws.com/Group+184.png";
             openButton.disabled = false;
           }, 1500);
         }
@@ -376,13 +385,9 @@
         }
       });
 
-      modelViewer.addEventListener("quick-look-button-tapped", () =>
-        modelViewer.pause()
-      );
-
       console.log(window.location.href);
       modelViewer.src = glb[1];
-      //modelViewer.iosSrc = usdz[1];
+      modelViewer.iosSrc = usdz[1];
       code = code[1];
       nickname = nickname[1];
 
