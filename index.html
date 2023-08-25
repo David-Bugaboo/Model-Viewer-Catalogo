@@ -1,539 +1,467 @@
 <!DOCTYPE html>
 <html lang="pt">
-  <head>
-    <meta charset="utf-8" />
 
-    <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script
-      type="module"
-      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
-    ></script>
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Titillium+Web&display=swap");
+<head>
+  <meta charset="utf-8" />
 
-      #divPosicao {
-        height: auto;
-      }
-      #controls {
-        position: absolute;
-        top: 0x;
-        right: 30px;
-        max-width: unset;
-        transform: unset;
-        display: flex;
-        align-items: center;
-      }
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Titillium+Web&display=swap");
 
-      #controls button {
-        cursor: pointer;
-      }
+    #divPosicao {
+      height: auto;
+    }
 
-      .dot {
-        display: block;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-        background: linear-gradient(180deg, #b64c70 0%, #5b0daf 100%);
-        --min-hotspot-opacity: 0;
-        border: 0px;
-      }
+    #controls {
+      position: absolute;
+      top: 0x;
+      right: 30px;
+      max-width: unset;
+      transform: unset;
+      display: flex;
+      align-items: center;
+    }
 
-      .dim {
-        border-radius: 4px;
+    #controls button {
+      cursor: pointer;
+    }
 
-        color: #52468f;
-        display: block;
-        font-family: Futura, Helvetica Neue, sans-serif;
-        font-size: 18px;
-        font-weight: 700;
-        max-width: 128px;
-        overflow-wrap: break-word;
-        padding: 0.2em;
-        position: absolute;
-        width: max-content;
-        height: max-content;
-        transform: translate3d(-50%, -50%, 0);
-        --min-hotspot-opacity: 0;
-        border: 1px solid;
-        border-image: linear-gradient(to right, darkblue, darkorchid) 1;
-      }
+    /* Esconde o checkbox */
 
-      .show {
-        --min-hotspot-opacity: 1;
-      }
 
-      .btnRedimensionar {
-        width: 50px;
-        height: 50px;
-        background-color: transparent;
-        border: 0px;
-      }
+    .dot {
+      display: block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+      background: linear-gradient(180deg, #b64c70 0%, #5b0daf 100%);
+      --min-hotspot-opacity: 0;
+      border: 0px;
+    }
 
-      .btnRedimensionar img {
-        width: 100%;
-      }
+    .dim {
+      border-radius: 4px;
 
-      .posicao {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: absolute;
-        background-color: white;
-        top: 50px;
-        width: 50px;
-        height: 180px;
-        z-index: 100;
-        right: 0;
-        border-radius: 7px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-      }
+      color: #52468f;
+      display: block;
+      font-family: Futura, Helvetica Neue, sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      max-width: 128px;
+      overflow-wrap: break-word;
+      padding: 0.2em;
+      position: absolute;
+      width: max-content;
+      height: max-content;
+      transform: translate3d(-50%, -50%, 0);
+      --min-hotspot-opacity: 0;
+      border: 1px solid;
+      border-image: linear-gradient(to right, darkblue, darkorchid) 1;
+    }
 
-      .posicao button {
-        width: 40px;
-        height: 40px;
-        cursor: pointer;
-      }
+    .show {
+      --min-hotspot-opacity: 1;
+    }
 
-      .naoMostra {
-        display: none;
-      }
+    .btnRedimensionar {
+      width: 50px;
+      height: 50px;
+      background-color: transparent;
+      border: 0px;
+    }
 
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+    .btnRedimensionar img {
+      width: 100%;
+    }
 
-      .arButton {
-        position: fixed;
-        bottom: 15%;
-        left: 50%;
-        transform: translateX(-50%);
-        box-sizing: border-box;
-        width: 66%;
-        height: 20px;
-        border: none;
-        min-width: 160px;
+    .posicao {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: absolute;
+      background-color: white;
+      top: 50px;
+      width: 50px;
+      height: 180px;
+      z-index: 100;
+      right: 0;
+      border-radius: 7px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    }
 
-        border: 1px solid;
-        background-color: rgba(255, 255, 255, 0.247);
-        border-color: #e4afe4;
-        /*box-shadow: 0px -4px 20px rgba(124, 61, 192, 0.15), 0px 2px 15px rgba(255, 255, 255, 0.75), inset 0px 0px 10px #FFFFFF, inset 0px 0px 15px #FFFFFF, inset 0px 0px 20px rgba(82, 70, 143, 0.33), inset 3px 3px 20px rgba(181, 160, 204, 0.48);*/
-        box-shadow: 0px -4px 10px #f2f1f7, 0px 8px 15px rgba(198, 80, 202, 0.15);
-        border-radius: 969px;
-        display: flex;
-        padding: 15px 15px;
-        justify-content: center;
-        gap: 8px;
-        align-items: center;
-        cursor: pointer;
-        font-size: 0.575rem;
-        text-align: center;
-        color: #b451a7;
-        font-weight: 700;
-      }
+    .posicao button {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
 
-      .aviso {
-        position: absolute;
-        /* position the div in center */
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: linear-gradient(182.59deg, #ffffff 2.16%, #f4e7f5 97.84%);
-        box-shadow: 0px 8px 20px rgba(82, 70, 143, 0.25);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 200px;
-        height: 40px;
+    .naoMostra {
+      display: none;
+    }
 
-        text-align: center;
-        border-radius: 15px;
-        font-size: 18px;
-        font-family: "Titillium Web", sans-serif;
-        color: #52468f;
-        /* animation: aparecer 0.2s linear forwards; */
-        z-index: 100;
-      }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-      .some {
-        animation: sumir 2s linear forwards;
-        animation-delay: 1s;
-      }
+    .arButton {
+      position: fixed;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      box-sizing: border-box;
+      width: 66%;
+      height: 20px;
+      border: none;
+      min-width: 160px;
 
-      @keyframes aparecer {
-        0% {
-          opacity: 0;
-        }
+      border: 1px solid;
+      background-color: rgba(255, 255, 255, 0.247);
+      border-color: #e4afe4;
+      /*box-shadow: 0px -4px 20px rgba(124, 61, 192, 0.15), 0px 2px 15px rgba(255, 255, 255, 0.75), inset 0px 0px 10px #FFFFFF, inset 0px 0px 15px #FFFFFF, inset 0px 0px 20px rgba(82, 70, 143, 0.33), inset 3px 3px 20px rgba(181, 160, 204, 0.48);*/
+      box-shadow: 0px -4px 10px #f2f1f7, 0px 8px 15px rgba(198, 80, 202, 0.15);
+      border-radius: 969px;
+      display: flex;
+      padding: 15px 15px;
+      justify-content: center;
+      gap: 8px;
+      align-items: center;
+      cursor: pointer;
+      font-size: 0.575rem;
+      text-align: center;
+      color: #b451a7;
+      font-weight: 700;
+    }
 
-        100% {
-          opacity: 1;
-        }
+    .aviso {
+      position: absolute;
+      /* position the div in center */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(182.59deg, #ffffff 2.16%, #f4e7f5 97.84%);
+      box-shadow: 0px 8px 20px rgba(82, 70, 143, 0.25);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 200px;
+      height: 40px;
+
+      text-align: center;
+      border-radius: 15px;
+      font-size: 18px;
+      font-family: "Titillium Web", sans-serif;
+      color: #52468f;
+      /* animation: aparecer 0.2s linear forwards; */
+      z-index: 100;
+    }
+
+    .some {
+      animation: sumir 2s linear forwards;
+      animation-delay: 1s;
+    }
+
+    @keyframes aparecer {
+      0% {
+        opacity: 0;
       }
 
-      @keyframes sumir {
-        0% {
-          opacity: 1;
-        }
+      100% {
+        opacity: 1;
+      }
+    }
 
-        100% {
-          opacity: 0;
-        }
+    @keyframes sumir {
+      0% {
+        opacity: 1;
       }
 
-      #openButton {
-        width: 150px;
-        height: 50px;
-        background-color: transparent;
-        border: none;
+      100% {
+        opacity: 0;
       }
+    }
 
-      #openButtonImage {
-        width: 100%;
-      }
+    #openButton {
+      width: 150px;
+      height: 50px;
+      background-color: transparent;
+      border: none;
+    }
 
-      #openButton:disabled {
-        opacity: 50;
-      }
+    #openButtonImage {
+      width: 100%;
+    }
 
-      .hide {
-        display: none;
-      }
+    #openButton:disabled {
+      opacity: 50;
+    }
 
-      /* This keeps child nodes hidden while the element loads */
-      :not(:defined) > * {
-        display: none;
-      }
-    </style>
-  </head>
+    .hide {
+      display: none;
+    }
 
-  <body>
-    <model-viewer
-      enable-pan
-      environment-image="neutral"
-      style="width: 100%; height: 98vh"
-      loading="eager"
-      id="dimension-demo"
-      ar
-      ar-modes="quick-look scene-viewer"
-      xr-environment
-      ar-scale="auto"
-      camera-orbit="-30deg auto auto"
-      max-camera-orbit="auto 100deg auto"
-      camera-controls
-      src="AnimatedGLB/armario_nesher_05.glb"
-    >
-      <button
-        slot="hotspot-dot+X-Y+Z"
-        class="dot hide"
-        data-position="1 -1 1"
-        data-normal="1 0 0"
-      ></button>
-      <button
-        slot="hotspot-dim+X-Y"
-        class="dim hide"
-        data-position="1 -1 0"
-        data-normal="1 0 0"
-      ></button>
-      <button
-        slot="hotspot-dot+X-Y-Z"
-        class="dot hide"
-        data-position="1 -1 -1"
-        data-normal="1 0 0"
-      ></button>
-      <button
-        slot="hotspot-dim+X-Z"
-        class="dim hide"
-        data-position="1 0 -1"
-        data-normal="1 0 0"
-      ></button>
-      <button
-        slot="hotspot-dot+X+Y-Z"
-        class="dot show hide"
-        data-position="1 1 -1"
-        data-normal="0 1 0"
-      ></button>
-      <button
-        slot="hotspot-dim+Y-Z"
-        class="dim show hide"
-        data-position="0 -1 -1"
-        data-normal="0 1 0"
-      ></button>
-      <button
-        slot="hotspot-dot-X+Y-Z"
-        class="dot show hide"
-        data-position="-1 1 -1"
-        data-normal="0 1 0"
-      ></button>
-      <button
-        slot="hotspot-dim-X-Z"
-        class="dim hide"
-        data-position="-1 0 -1"
-        data-normal="-1 0 0"
-      ></button>
-      <button
-        slot="hotspot-dot-X-Y-Z"
-        class="dot hide"
-        data-position="-1 -1 -1"
-        data-normal="-1 0 0"
-      ></button>
-      <button
-        slot="hotspot-dim-X-Y"
-        class="dim hide"
-        data-position="-1 -1 0"
-        data-normal="-1 0 0"
-      ></button>
-      <button
-        slot="hotspot-dot-X-Y+Z"
-        class="dot hide"
-        data-position="-1 -1 1"
-        data-normal="-1 0 0"
-      ></button>
+    /* This keeps child nodes hidden while the element loads */
+    :not(:defined)>* {
+      display: none;
+    }
+  </style>
+</head>
 
-      <p class="aviso hide some" id="aviso">Link copiado!</p>
+<body>
+  <model-viewer enable-pan environment-image="neutral" style="width: 100%; height: 98vh" loading="eager"
+    id="dimension-demo" ar ar-modes="quick-look scene-viewer" xr-environment ar-scale="auto"
+    camera-orbit="-30deg auto auto" max-camera-orbit="auto 100deg auto" camera-controls
+    src="AnimatedGLB/armario_nesher_05.glb">
+    <button slot="hotspot-dot+X-Y+Z" class="dot hide" data-position="1 -1 1" data-normal="1 0 0"></button>
+    <button slot="hotspot-dim+X-Y" class="dim hide" data-position="1 -1 0" data-normal="1 0 0"></button>
+    <button slot="hotspot-dot+X-Y-Z" class="dot hide" data-position="1 -1 -1" data-normal="1 0 0"></button>
+    <button slot="hotspot-dim+X-Z" class="dim hide" data-position="1 0 -1" data-normal="1 0 0"></button>
+    <button slot="hotspot-dot+X+Y-Z" class="dot show hide" data-position="1 1 -1" data-normal="0 1 0"></button>
+    <button slot="hotspot-dim+Y-Z" class="dim show hide" data-position="0 -1 -1" data-normal="0 1 0"></button>
+    <button slot="hotspot-dot-X+Y-Z" class="dot show hide" data-position="-1 1 -1" data-normal="0 1 0"></button>
+    <button slot="hotspot-dim-X-Z" class="dim hide" data-position="-1 0 -1" data-normal="-1 0 0"></button>
+    <button slot="hotspot-dot-X-Y-Z" class="dot hide" data-position="-1 -1 -1" data-normal="-1 0 0"></button>
+    <button slot="hotspot-dim-X-Y" class="dim hide" data-position="-1 -1 0" data-normal="-1 0 0"></button>
+    <button slot="hotspot-dot-X-Y+Z" class="dot hide" data-position="-1 -1 1" data-normal="-1 0 0"></button>
 
-      <button class="arButton" slot="ar-button" id="ar-button">
-        <img
-          style="width: 15px; height: 15px; object-fit: contain"
-          src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fsimplexr.svg?alt=media&token=bbbb886b-322b-49b4-aa72-29b9da349924"
-        />
-        <p>Visualize no seu ambiente</p>
-      </button>
+    <p class="aviso hide some" id="aviso">Link copiado!</p>
 
-      <div id="controls" class="">
-        <button class="hide" id="openButton">
-          <img
-            id="openButtonImage"
-            src="https://mundo-iel.s3.amazonaws.com/Group+184.png"
-            alt=""
-          />
-        </button>
+    <button class="arButton" slot="ar-button" id="ar-button">
+      <img style="width: 15px; height: 15px; object-fit: contain"
+        src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fsimplexr.svg?alt=media&token=bbbb886b-322b-49b4-aa72-29b9da349924" />
+      <p>Visualize no seu ambiente</p>
+    </button>
 
-        <button class="btnRedimensionar" id="posicao">
-          <img
-            src="https://mundo-iel.s3.amazonaws.com/MicrosoftTeams-image.png"
-            alt=""
-          />
-        </button>
-        <div class="posicao hide" id="divPosicao">
-          <!-- frente -->
-          <button class="btnRedimensionar" id="shared">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fshare.svg?alt=media&token=c3063d74-49de-48b7-8579-d41563374bd5"
-              alt=""
-            />
-          </button>
+    <div id="controls" class="">
+      <div style="scale:50%; width: 180px; height: 50px;" class="toggle-wrapper">
+        <label class="switch">
+          <input id="openButton" type="checkbox" class="hidden-toggle" checked />
+          <div class="slider">
+            <div class="button"> </div>
+          </div>
 
-          <button class="btnRedimensionar" id="redimensionar">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fdimensao.svg?alt=media&token=afc6cb10-7b80-45bc-9a97-d1cb9372b72a"
-              alt=""
-            />
-          </button>
-        </div>
+        </label>
       </div>
-    </model-viewer>
+      <button class="btnRedimensionar" id="posicao">
+        <img src="https://mundo-iel.s3.amazonaws.com/MicrosoftTeams-image.png" alt="" />
+      </button>
+      <div class="posicao hide" id="divPosicao">
+        <!-- frente -->
+        <button class="btnRedimensionar" id="shared">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fshare.svg?alt=media&token=c3063d74-49de-48b7-8579-d41563374bd5"
+            alt="" />
+        </button>
 
-    <script type="module">
-      var exposure = 0;
-      var showDimension = false;
-      var showPosicao = false;
-      const modelViewer = document.querySelector("#dimension-demo");
-      const openButton = document.getElementById("openButton");
-      const openButtonImage = document.getElementById("openButtonImage");
+        <button class="btnRedimensionar" id="redimensionar">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/bird-9fcef.appspot.com/o/simplexr%2Fdimensao.svg?alt=media&token=afc6cb10-7b80-45bc-9a97-d1cb9372b72a"
+            alt="" />
+        </button>
+      </div>
+    </div>
+  </model-viewer>
 
-      var open = false;
+  <script type="module">
+    var exposure = 0;
+    var showDimension = false;
+    var showPosicao = false;
+    const modelViewer = document.querySelector("#dimension-demo");
+    const openButton = document.getElementById("openButton");
+    const openButtonImage = document.getElementById("openButtonImage");
 
-      openButton.addEventListener("click", async () => {
-        if (open === false) {
-          openButton.disabled = true;
-          modelViewer.play();
-          await setTimeout(() => {
-            modelViewer.pause();
-            open = true;
-            openButtonImage.src =
-              "https://mundo-iel.s3.amazonaws.com/Group+17.png";
-            open = true;
-            openButton.disabled = false;
-          }, 1500);
-        } else {
-          openButton.disabled = true;
-          modelViewer.play();
-          await setTimeout(() => {
-            modelViewer.pause();
-            open = false;
-            openButtonImage.src =
-              "https://mundo-iel.s3.amazonaws.com/Group+184.png";
-            openButton.disabled = false;
-          }, 1500);
-        }
-      });
+    var open = false;
 
-      var glb = location.href.split("?")[1].split("&")[0].split("=");
-      var usdz = location.href.split("?")[1].split("&")[1].split("=");
-      
-      var code = location.href.split("?")[1].split("&")[2].split("=");
-      var nickname = location.href.split("?")[1].split("&")[3].split("=");
-
-      /*pause anims in AR*/
-      modelViewer.addEventListener("ar-status", (e) => {
-        if (e.detail.status === "object-placed") {
+    openButton.addEventListener("click", async () => {
+      if (open === false) {
+        openButton.disabled = true;
+        modelViewer.play();
+        await setTimeout(() => {
           modelViewer.pause();
+          open = true;
+          open = true;
+          openButton.disabled = false;
+        }, 1500);
+      } else {
+        openButton.disabled = true;
+        modelViewer.play();
+        await setTimeout(() => {
+          modelViewer.pause();
+          open = false;
+          openButton.disabled = false;
+        }, 1500);
+      }
+    });
+
+    var glb = location.href.split("?")[1].split("&")[0].split("=");
+    var usdz = location.href.split("?")[1].split("&")[1].split("=");
+
+    var code = location.href.split("?")[1].split("&")[2].split("=");
+    var nickname = location.href.split("?")[1].split("&")[3].split("=");
+
+    /*pause anims in AR*/
+    modelViewer.addEventListener("ar-status", (e) => {
+      if (e.detail.status === "object-placed") {
+        modelViewer.pause();
+      }
+    });
+
+    console.log(window.location.href);
+    modelViewer.src = glb[1];
+    modelViewer.iosSrc = usdz[1];
+    console.log(modelViewer.iosSrc)
+    code = code[1];
+    nickname = nickname[1];
+
+    const btnRedimensionar = document.querySelector("#redimensionar");
+    const btnShared = document.querySelector("#shared");
+    const btnPosicao = document.querySelector("#posicao");
+    const btnAr = document.querySelector("#ar-button");
+    const divPosicao = document.querySelector("#divPosicao");
+    const divAviso = document.querySelector("#aviso");
+
+    const btnPosicao1 = modelViewer.querySelector("#posicao1");
+    const btnPosicao2 = modelViewer.querySelector("#posicao2");
+    const btnPosicao3 = modelViewer.querySelector("#posicao3");
+    const btnPosicao4 = modelViewer.querySelector("#posicao4");
+    const btnPosicao5 = modelViewer.querySelector("#posicao5");
+
+    if (nickname == "moveis-bechara" || nickname == "whirlpool") {
+      btnRedimensionar.classList.add("hide");
+    }
+
+    btnRedimensionar.addEventListener("click", () => {
+      showDimension = !showDimension;
+      modelViewer.querySelectorAll("button").forEach((hotspot) => {
+        if (showDimension) {
+          if (hotspot.id !== "openButton") {
+            hotspot.classList.remove("hide");
+          }
+        } else {
+          if (hotspot.id !== "openButton") {
+            hotspot.classList.add("hide");
+          }
+          btnRedimensionar.classList.remove("hide");
+          btnShared.classList.remove("hide");
+          btnPosicao.classList.remove("hide");
+
+          btnAr.classList.remove("hide");
         }
       });
+    });
+    btnShared.addEventListener("click", () => {
+      divAviso.classList.add("hide");
+      var inputc = document.body.appendChild(document.createElement("input"));
+      inputc.value = `https://simplexr-cliente.herokuapp.com/catalogo/${code}`;
+      inputc.focus();
+      inputc.select();
+      document.execCommand("copy");
+      inputc.parentNode.removeChild(inputc);
+      divAviso.classList.remove("hide");
+    });
+    btnPosicao.addEventListener("click", () => {
+      showPosicao = !showPosicao;
+      if (showPosicao) {
+        divPosicao.classList.remove("hide");
+      } else {
+        divPosicao.classList.add("hide");
+      }
+    });
 
-      console.log(window.location.href);
-      modelViewer.src = glb[1];
-      modelViewer.iosSrc = usdz[1];
-      console.log(modelViewer.iosSrc)
-      code = code[1];
-      nickname = nickname[1];
+    modelViewer.addEventListener("load", () => {
+      console.log("passei aqui!");
+      const center = modelViewer.getCameraTarget();
+      const size = modelViewer.getDimensions();
+      const x2 = size.x / 2;
+      const y2 = size.y / 2;
+      const z2 = size.z / 2;
+      const names = modelViewer.availableAnimations;
+      console.log(names);
 
-      const btnRedimensionar = document.querySelector("#redimensionar");
-      const btnShared = document.querySelector("#shared");
-      const btnPosicao = document.querySelector("#posicao");
-      const btnAr = document.querySelector("#ar-button");
-      const divPosicao = document.querySelector("#divPosicao");
-      const divAviso = document.querySelector("#aviso");
-
-      const btnPosicao1 = modelViewer.querySelector("#posicao1");
-      const btnPosicao2 = modelViewer.querySelector("#posicao2");
-      const btnPosicao3 = modelViewer.querySelector("#posicao3");
-      const btnPosicao4 = modelViewer.querySelector("#posicao4");
-      const btnPosicao5 = modelViewer.querySelector("#posicao5");
-
-      if (nickname == "moveis-bechara" || nickname == "whirlpool") {
-        btnRedimensionar.classList.add("hide");
+      console.log("opa, passa aqui!");
+      if (modelViewer.availableAnimations.length > 0) {
+        console.log("show button");
+        openButton.classList.remove("hide");
       }
 
-      btnRedimensionar.addEventListener("click", () => {
-        showDimension = !showDimension;
-        modelViewer.querySelectorAll("button").forEach((hotspot) => {
-          if (showDimension) {
-            if (hotspot.id !== "openButton") {
-              hotspot.classList.remove("hide");
-            }
-          } else {
-            if (hotspot.id !== "openButton") {
-              hotspot.classList.add("hide");
-            }
-            btnRedimensionar.classList.remove("hide");
-            btnShared.classList.remove("hide");
-            btnPosicao.classList.remove("hide");
-
-            btnAr.classList.remove("hide");
-          }
-        });
-      });
-      btnShared.addEventListener("click", () => {
-        divAviso.classList.add("hide");
-        var inputc = document.body.appendChild(document.createElement("input"));
-        inputc.value = `https://simplexr-cliente.herokuapp.com/catalogo/${code}`;
-        inputc.focus();
-        inputc.select();
-        document.execCommand("copy");
-        inputc.parentNode.removeChild(inputc);
-        divAviso.classList.remove("hide");
-      });
-      btnPosicao.addEventListener("click", () => {
-        showPosicao = !showPosicao;
-        if (showPosicao) {
-          divPosicao.classList.remove("hide");
-        } else {
-          divPosicao.classList.add("hide");
-        }
+      modelViewer.updateHotspot({
+        name: "hotspot-dot+X-Y+Z",
+        position: `${center.x + x2} ${center.y - y2} ${center.z + z2}`,
       });
 
-      modelViewer.addEventListener("load", () => {
-        console.log("passei aqui!");
-        const center = modelViewer.getCameraTarget();
-        const size = modelViewer.getDimensions();
-        const x2 = size.x / 2;
-        const y2 = size.y / 2;
-        const z2 = size.z / 2;
-        const names = modelViewer.availableAnimations;
-        console.log(names);
-
-        console.log("opa, passa aqui!");
-        if (modelViewer.availableAnimations.length > 0) {
-          console.log("show button");
-          openButton.classList.remove("hide");
-        }
-
-        modelViewer.updateHotspot({
-          name: "hotspot-dot+X-Y+Z",
-          position: `${center.x + x2} ${center.y - y2} ${center.z + z2}`,
-        });
-
-        modelViewer.updateHotspot({
-          name: "hotspot-dim+X-Y",
-          position: `${center.x + x2} ${center.y - y2} ${center.z}`,
-        });
-        modelViewer.querySelector(
-          'button[slot="hotspot-dim+X-Y"]'
-        ).textContent = `${(size.z * 100).toFixed(0)} cm`;
-
-        modelViewer.updateHotspot({
-          name: "hotspot-dot+X-Y-Z",
-          position: `${center.x + x2} ${center.y - y2} ${center.z - z2}`,
-        });
-
-        modelViewer.updateHotspot({
-          name: "hotspot-dim+X-Z",
-          position: `${center.x + x2} ${center.y} ${center.z - z2}`,
-        });
-        modelViewer.querySelector(
-          'button[slot="hotspot-dim+X-Z"]'
-        ).textContent = `${(size.y * 100).toFixed(0)} cm`;
-
-        modelViewer.updateHotspot({
-          name: "hotspot-dot+X+Y-Z",
-          position: `${center.x + x2} ${center.y + y2} ${center.z - z2}`,
-        });
-
-        modelViewer.updateHotspot({
-          name: "hotspot-dim+Y-Z",
-          position: `${center.x} ${center.y + y2} ${center.z - z2}`,
-        });
-        modelViewer.querySelector(
-          'button[slot="hotspot-dim+Y-Z"]'
-        ).textContent = `${(size.x * 100).toFixed(0)} cm`;
-
-        modelViewer.updateHotspot({
-          name: "hotspot-dot-X+Y-Z",
-          position: `${center.x - x2} ${center.y + y2} ${center.z - z2}`,
-        });
-
-        modelViewer.updateHotspot({
-          name: "hotspot-dim-X-Z",
-          position: `${center.x - x2} ${center.y} ${center.z - z2}`,
-        });
-        modelViewer.querySelector(
-          'button[slot="hotspot-dim-X-Z"]'
-        ).textContent = `${(size.y * 100).toFixed(0)} cm`;
-
-        modelViewer.updateHotspot({
-          name: "hotspot-dot-X-Y-Z",
-          position: `${center.x - x2} ${center.y - y2} ${center.z - z2}`,
-        });
-
-        modelViewer.updateHotspot({
-          name: "hotspot-dim-X-Y",
-          position: `${center.x - x2} ${center.y - y2} ${center.z}`,
-        });
-        modelViewer.querySelector(
-          'button[slot="hotspot-dim-X-Y"]'
-        ).textContent = `${(size.z * 100).toFixed(0)} cm`;
-
-        modelViewer.updateHotspot({
-          name: "hotspot-dot-X-Y+Z",
-          position: `${center.x - x2} ${center.y - y2} ${center.z + z2}`,
-        });
+      modelViewer.updateHotspot({
+        name: "hotspot-dim+X-Y",
+        position: `${center.x + x2} ${center.y - y2} ${center.z}`,
       });
-    </script>
-  </body>
+      modelViewer.querySelector(
+        'button[slot="hotspot-dim+X-Y"]'
+      ).textContent = `${(size.z * 100).toFixed(0)} cm`;
+
+      modelViewer.updateHotspot({
+        name: "hotspot-dot+X-Y-Z",
+        position: `${center.x + x2} ${center.y - y2} ${center.z - z2}`,
+      });
+
+      modelViewer.updateHotspot({
+        name: "hotspot-dim+X-Z",
+        position: `${center.x + x2} ${center.y} ${center.z - z2}`,
+      });
+      modelViewer.querySelector(
+        'button[slot="hotspot-dim+X-Z"]'
+      ).textContent = `${(size.y * 100).toFixed(0)} cm`;
+
+      modelViewer.updateHotspot({
+        name: "hotspot-dot+X+Y-Z",
+        position: `${center.x + x2} ${center.y + y2} ${center.z - z2}`,
+      });
+
+      modelViewer.updateHotspot({
+        name: "hotspot-dim+Y-Z",
+        position: `${center.x} ${center.y + y2} ${center.z - z2}`,
+      });
+      modelViewer.querySelector(
+        'button[slot="hotspot-dim+Y-Z"]'
+      ).textContent = `${(size.x * 100).toFixed(0)} cm`;
+
+      modelViewer.updateHotspot({
+        name: "hotspot-dot-X+Y-Z",
+        position: `${center.x - x2} ${center.y + y2} ${center.z - z2}`,
+      });
+
+      modelViewer.updateHotspot({
+        name: "hotspot-dim-X-Z",
+        position: `${center.x - x2} ${center.y} ${center.z - z2}`,
+      });
+      modelViewer.querySelector(
+        'button[slot="hotspot-dim-X-Z"]'
+      ).textContent = `${(size.y * 100).toFixed(0)} cm`;
+
+      modelViewer.updateHotspot({
+        name: "hotspot-dot-X-Y-Z",
+        position: `${center.x - x2} ${center.y - y2} ${center.z - z2}`,
+      });
+
+      modelViewer.updateHotspot({
+        name: "hotspot-dim-X-Y",
+        position: `${center.x - x2} ${center.y - y2} ${center.z}`,
+      });
+      modelViewer.querySelector(
+        'button[slot="hotspot-dim-X-Y"]'
+      ).textContent = `${(size.z * 100).toFixed(0)} cm`;
+
+      modelViewer.updateHotspot({
+        name: "hotspot-dot-X-Y+Z",
+        position: `${center.x - x2} ${center.y - y2} ${center.z + z2}`,
+      });
+    });
+  </script>
+</body>
+
 </html>
