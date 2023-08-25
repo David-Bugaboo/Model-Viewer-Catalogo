@@ -240,7 +240,7 @@
     </button>
 
     <div id="controls" class="">
-      <div style="scale:50%; width: 180px; height: 50px;" class="toggle-wrapper">
+      <div id="open-wrapper" style="scale:50%; width: 180px; height: 50px;" class=" hide toggle-wrapper">
         <label class="switch">
           <input id="openButton" type="checkbox" class="hidden-toggle" checked />
           <div class="slider">
@@ -275,6 +275,7 @@
     var showPosicao = false;
     const modelViewer = document.querySelector("#dimension-demo");
     const openButton = document.getElementById("openButton");
+    const openWrapper = document.getElementById("open-wrapper")
     const openButtonImage = document.getElementById("openButtonImage");
 
     var open = false;
@@ -341,7 +342,7 @@
       showDimension = !showDimension;
       modelViewer.querySelectorAll("button").forEach((hotspot) => {
         if (showDimension) {
-          if (hotspot.id !== "openButton") {
+          if (hotspot.id !== "open-wrapper") {
             hotspot.classList.remove("hide");
           }
         } else {
@@ -385,10 +386,12 @@
       const names = modelViewer.availableAnimations;
       console.log(names);
 
+
       console.log("opa, passa aqui!");
       if (modelViewer.availableAnimations.length > 0) {
+
         console.log("show button");
-        openButton.classList.remove("hide");
+        openWrapper.classList.remove("hide");
       }
 
       modelViewer.updateHotspot({
